@@ -33,7 +33,7 @@ netlify/functions/build-report-background.mts   runs one job (15 min budget)
 netlify/functions/cleanup.mts                    daily expiry of old reports and leads
 ```
 
-Report flow: `POST /api/reports` validates the URL for the configured source, applies rate limit + daily cap, stores a `queued` record with a random link key, returns `/r/<id>/<key>`, and triggers the job (Netlify: background function, authenticated with an HMAC derived from `ADMIN_PASSWORD`; dev: `after()`). The report page polls `/api/r/<id>/<key>`.
+Report flow: `POST /api/reports` validates the URL for the configured source, applies rate limit + daily cap, stores a `queued` record with a random link key, returns `/r/<id>/<key>`, and triggers the job (Netlify: background function, authenticated with a random 32-byte secret generated on first run and kept in Blob storage; dev: `after()`). The report page polls `/api/r/<id>/<key>`.
 
 Modes: live (no opt-in), public (`publicMode.optIn: true`, first name + email, posted to the CRM webhook), sent (admin pre-built, quiet loader, never opt-in), signed pre-filled links (admin makes them; skip opt-in).
 
