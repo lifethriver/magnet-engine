@@ -1,0 +1,15 @@
+# Netlify reads this file on every deploy. Attendees never need to edit it.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The "Deploy to Netlify" button asks for each of these during setup.
+# The text on the right is the hint shown next to each box, not a value.
+[template.environment]
+  ANTHROPIC_API_KEY = "Your Claude API key from console.anthropic.com (starts with sk-ant-)"
+  APIFY_TOKEN = "Your Apify API token from console.apify.com > Settings > API & Integrations"
+  ADMIN_PASSWORD = "Make up a password for your admin page (12+ characters, write it down)"

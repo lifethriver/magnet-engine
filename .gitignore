@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+
+# next.js / netlify build output
+.next/
+out/
+.netlify/
+next-env.d.ts
+*.tsbuildinfo
+
+# secrets: never commit any env file except the example
+.env
+.env.*
+!.env.example
+
+# local dev data (report files, leads) written by the dev-only file store
+.data/
+
+# misc
+.DS_Store
+npm-debug.log*

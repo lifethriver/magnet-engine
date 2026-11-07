@@ -1,0 +1,53 @@
+# Example 3: a fitness coach who sells to busy professionals.
+# Prospect: an executive or manager on LinkedIn. Best as a sent link with conversation notes.
+# Same block as in IDEA-GENERATOR.md; a test keeps the two in sync.
+version: 1
+name: "Desk-Job Energy Plan"
+source:
+  type: linkedin
+  alsoReadWebsite: false
+  linkedinPosts: 5
+about:
+  owner: "Jordan Lee, a fitness coach for busy professionals who sit most of the day"
+  offer: "1-on-1 online coaching with short workouts and simple habits built around a demanding work schedule"
+  reader: "Executives, managers and founders with long workdays, frequent meetings and travel"
+lens:
+  - "What does this person's role, seniority and industry suggest about their workday (meetings, travel, screen time, schedule)?"
+  - "Where in a day like that do energy and movement usually drop, and what small habits fit around it?"
+  - "If conversation notes are given, what did they say about their schedule, goals or limits, and how should the plan respect that?"
+sections:
+  - title: "What your role asks of your body"
+    intro: "Your job shapes your energy more than any workout does. Here's what yours likely asks of you."
+    asks: "Describe, from their real role, company type and seniority (and any conversation notes), the 2 or 3 parts of their workday that most affect energy and movement. Frame it as typical for roles like theirs, never as a claim about their health."
+    style: paragraph
+  - title: "Your energy plan for a workday like yours"
+    intro: "Small moves that fit around meetings, not on top of them."
+    asks: "Give 4 specific habits or short routines timed to their workday (before work, between meetings, travel days, evening). Tie each to something about their role or notes."
+    style: list
+    items: 4
+  - title: "Your first week"
+    asks: "Give 3 steps for the first week that take under 10 minutes a day. Keep them general wellness habits, never medical advice."
+    style: steps
+    items: 3
+wording:
+  headline: "Get an energy plan built around your actual workday"
+  subheadline: "Paste your LinkedIn profile and get a free Desk-Job Energy Plan built around the demands of your role."
+  inputLabel: "Your LinkedIn profile link"
+  inputPlaceholder: "linkedin.com/in/yourname"
+  buttonText: "Build my plan"
+  reportHeadline: "{name}, here's your Desk-Job Energy Plan"
+  reportIntro: "This plan is built around your role, not a generic workout."
+  closing: "You don't need an hour a day. You need a few minutes in the right spots of the day you already have."
+cta:
+  heading: "Want this plan adjusted to you?"
+  text: "Reply to my message or book a short call, and I'll tailor it to your schedule."
+  buttonText: "Book a 15-minute call"
+  url: "https://example.com/call"
+branding:
+  primaryColor: "#7a1f3d"
+publicMode:
+  optIn: false
+limits:
+  dailyReports: 10
+footer:
+  text: "Jordan Lee Coaching. General wellness information, not medical advice. Check with your doctor before starting a new exercise routine."

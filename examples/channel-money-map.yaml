@@ -1,0 +1,67 @@
+# Example 1: an affiliate who promotes a "build an online income" course.
+# Prospect: a YouTube creator who posts regularly but hasn't monetized.
+# Same block as in IDEA-GENERATOR.md; a test keeps the two in sync.
+version: 1
+name: "Channel Money Map"
+source:
+  type: youtube
+  alsoReadWebsite: true
+about:
+  owner: "Sam Rivera, an affiliate marketer who helps small YouTube creators turn their channel into income"
+  offer: "A step-by-step training on picking an affiliate or digital offer that fits your channel and adding it to your videos, descriptions and an email list"
+  reader: "Small YouTube creators who post regularly but haven't turned their channel into income yet"
+lens:
+  - "What topics does this channel already cover, and which of them attract people who buy things?"
+  - "Which 3 kinds of offers (affiliate products, a small digital product, a service) fit what this creator already talks about?"
+  - "What's missing from the channel header, links and descriptions that would let a viewer take a next step?"
+  - "What's the simplest first money move this creator could make this month with the videos they already have?"
+sections:
+  - title: "What your channel is already about"
+    intro: "Before you add anything, here's what your videos already say about you."
+    asks: "Name the 2 or 3 recurring themes across their recent videos using real video titles, and say which theme draws the kind of viewer most likely to buy a recommendation."
+    style: paragraph
+  - title: "3 offers that fit what you already talk about"
+    intro: "Each of these matches topics you already cover, so it won't feel like a pitch."
+    asks: "Suggest 3 types of offers (name the category, not a specific brand) that fit their themes. For each, tie it to a specific video of theirs and say where in that video or its description it would naturally go."
+    style: list
+    items: 3
+  - title: "Your money-readiness scores"
+    intro: "A quick look at the places a viewer could take a next step today."
+    asks: "Score their channel header and links, their video titles as a path to an offer, and whether there's any way to join an email list. For each, cite what's there now and the single change that would raise the score."
+    style: scores
+    items: 3
+  - title: "Your bio and link fix"
+    asks: "Write the exact improvement to their channel description or header links, based on their real topics, in 2 or 3 sentences they could paste today."
+    style: paragraph
+  - title: "Your first 3 moves this month"
+    asks: "Give 3 concrete steps for this month that use videos they already published. Name the videos."
+    style: steps
+    items: 3
+wording:
+  headline: "See what your YouTube channel could be earning"
+  subheadline: "Paste your channel link and get a free Channel Money Map in about a minute. It shows 3 offers that fit what you already talk about, plus the one fix to make first."
+  inputLabel: "Your YouTube channel link"
+  inputPlaceholder: "youtube.com/@yourchannel"
+  buttonText: "Build my Channel Money Map"
+  loadingText: "We're going through your recent videos now. This takes about a minute."
+  reportHeadline: "{name}, here's your Channel Money Map"
+  reportIntro: "This map is built from your own videos, so every suggestion fits the channel you already have."
+  closing: "You don't need more videos to start earning. You need one good offer in the right place on the videos you already made."
+cta:
+  heading: "Want help setting up your first offer?"
+  text: "I put together a free training that walks through picking an offer and adding it to your channel, step by step."
+  buttonText: "Watch the free training"
+  url: "https://example.com/free-training"
+branding:
+  primaryColor: "#0f5132"
+  accentColor: "#f5b700"
+publicMode:
+  optIn: true
+  heading: "Where should we send a copy?"
+  buttonText: "Build my Channel Money Map"
+  consentText: "You'll also get my weekly email for creators. Unsubscribe any time."
+limits:
+  dailyReports: 20
+  perVisitorPerDay: 3
+footer:
+  text: "Sam Rivera. This map is general education, not a promise of income."

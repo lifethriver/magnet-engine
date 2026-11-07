@@ -1,0 +1,60 @@
+# Example 2: an over-50 "second act" coach.
+# Prospect: a career professional on LinkedIn who is 5 to 10 years from retirement.
+# Same block as in IDEA-GENERATOR.md; a test keeps the two in sync.
+version: 1
+name: "Second-Act Map"
+source:
+  type: linkedin
+  alsoReadWebsite: true
+  linkedinPosts: 5
+about:
+  owner: "Pat Morgan, a coach who helps professionals over 50 turn decades of experience into paid side work before they retire"
+  offer: "A 6-week program for turning your career experience into consulting, teaching or a small advisory business on the side"
+  reader: "Career professionals in their 50s and early 60s with 20 to 35 years of experience who are thinking about what comes after their current job"
+lens:
+  - "What specific expertise has this person built across their roles, in plain words a buyer would pay for?"
+  - "Who would pay for that expertise (which kinds of companies, people or organizations)?"
+  - "Which 5 side-income paths fit their background best, and why?"
+  - "What's already in place on their profile that would help them start, and what's missing?"
+sections:
+  - title: "What 30 years taught you that people pay for"
+    intro: "Most people undersell what they know. Here's what your career history says you're good at."
+    asks: "Translate their real roles, industries and accomplishments into 2 to 3 sentences of plain-language expertise a buyer would pay for. Name the roles you're drawing on."
+    style: paragraph
+  - title: "5 ways your experience can earn on the side"
+    intro: "Each path below is built from your actual background, not a generic list."
+    asks: "Give 5 side-income paths (consulting, fractional roles, teaching, speaking, advisory boards, a niche service, and so on) that fit their history. For each, name the part of their background it uses and who the first buyer would be."
+    style: list
+    items: 5
+  - title: "How ready your profile is"
+    intro: "A quick look at whether your LinkedIn profile would help or hurt if a buyer looked you up today."
+    asks: "Score their headline, their About section, and their recent activity as a signal of expertise. For each score, cite what's there and the one change that would raise it."
+    style: scores
+    items: 3
+  - title: "Your first 3 steps"
+    asks: "Give 3 concrete steps for the next 30 days that start from what they already have. Make the first one doable in an afternoon."
+    style: steps
+    items: 3
+wording:
+  headline: "Find out what your career is worth on the side"
+  subheadline: "Paste your LinkedIn profile and get a free Second-Act Map, 5 ways your experience could earn before (and after) you retire."
+  inputLabel: "Your LinkedIn profile link"
+  inputPlaceholder: "linkedin.com/in/yourname"
+  buttonText: "Build my Second-Act Map"
+  reportHeadline: "{name}, here's your Second-Act Map"
+  reportIntro: "This map is built from your own career history."
+  closing: "The experience is already there. The next step is choosing one path and testing it with a single paying client."
+cta:
+  heading: "Want to talk through your map?"
+  text: "Book a free 20-minute call and we'll pick the path that fits you best."
+  buttonText: "Book my free call"
+  url: "https://example.com/book"
+branding:
+  primaryColor: "#1f3a5f"
+  accentColor: "#e0a100"
+publicMode:
+  optIn: false
+limits:
+  dailyReports: 15
+footer:
+  text: "Pat Morgan, Second Act Coaching."
