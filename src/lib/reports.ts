@@ -9,7 +9,7 @@ import { kv, mutate } from "./store";
 import type { Settings, SourceType } from "./settings";
 import { loadSettings } from "./settings-store";
 import { apifyCost, SourceError } from "./sources/apify";
-import { gatherEvidence } from "./sources";
+import { gatherEvidence, type EvidenceHints } from "./sources";
 import { newReportId, newReportKey, safeEqual } from "./secrets";
 
 export type ReportMode = "live" | "public" | "prefilled" | "sent";
@@ -24,6 +24,8 @@ export interface ReportRecord {
   source: SourceType;
   url: string;
   notes: string[];
+  /** Website / YouTube the owner supplied so the engine needn't find them (optional, older records lack it). */
+  hints?: EvidenceHints;
   createdAt: string;
   updatedAt: string;
   leaseUntil: number | null;
@@ -48,6 +50,7 @@ export async function createReport(input: {
   source: SourceType;
   url: string;
   notes?: string[];
+  hints?: EvidenceHints;
 }): Promise<ReportRecord> {
   const now = new Date().toISOString();
   const record: ReportRecord = {
@@ -59,6 +62,7 @@ export async function createReport(input: {
     source: input.source,
     url: input.url,
     notes: input.notes ?? [],
+    ...(input.hints && (input.hints.website || input.hints.youtube) ? { hints: input.hints } : {}),
     createdAt: now,
     updatedAt: now,
     leaseUntil: null,
@@ -164,7 +168,7 @@ export async function runReport(id: string, settingsOverride?: Settings): Promis
     if (!settings) throw new SourceError("not_configured");
     if (settings.source.type !== claimed.source) throw new SourceError("source_changed");
 
-    const evidence = await gatherEvidence(settings, claimed.url);
+    const evidence = await gatherEvidence(settings, claimed.url, claimed.hints ?? {});
     runIds = evidence.apifyRunIds;
     if (evidence.strength === "none" && claimed.notes.length === 0) throw new SourceError("nothing_public");
 

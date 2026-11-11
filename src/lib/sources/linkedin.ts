@@ -28,9 +28,53 @@ function list(value: unknown): Loose[] {
   return Array.isArray(value) ? value.map(obj).filter((v): v is Loose => Boolean(v)) : [];
 }
 
-export function summarizeProfile(raw: unknown): { name: string | null; headline: string | null; facts: string[]; blocks: Evidence["blocks"]; website: string | null } {
+const SOCIAL_HOST = /(^|\.)(youtube\.com|youtu\.be|instagram\.com|facebook\.com|tiktok\.com|x\.com|twitter\.com|linkedin\.com)$/i;
+const SKIP_LINK = /linkedin\.com\/(in|posts|feed|pulse)|calendar\.app\.google|calendly\.com|linktr\.ee|beacons\.ai|stan\.store|bit\.ly|lnkd\.in/i;
+
+function hostOf(url: string): string | null {
+  try {
+    return new URL(url).hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+/** Pure: every http(s) link found anywhere on a profile object, deduplicated, shorteners and booking pages dropped. Exported for tests. */
+export function profileLinks(p: Record<string, unknown>): { website: string | null; channels: string[] } {
+  const found: string[] = [];
+  const push = (u: unknown) => {
+    const v = str(u);
+    if (v && /^https?:\/\//i.test(v) && !SKIP_LINK.test(v) && hostOf(v)) found.push(v.replace(/[),.;]+$/, ""));
+  };
+  list(p.profileActions).forEach((a) => push(a.url));
+  list(p.websites).forEach((w) => push(w.url ?? w.link ?? w));
+  (Array.isArray(p.websites) ? p.websites : []).forEach((w) => push(w));
+  const contact = obj(p.contactInfo) ?? obj(p.contact);
+  if (contact) {
+    list(contact.websites).forEach((w) => push(w.url ?? w));
+    (Array.isArray(contact.websites) ? contact.websites : []).forEach((w) => push(w));
+    push(contact.twitter);
+  }
+  const fobj = obj(p.featured);
+  const featuredRaw: unknown[] = Array.isArray(p.featured) ? p.featured : fobj ? [...(Array.isArray(fobj.items) ? fobj.items : []), ...(Array.isArray(fobj.slides) ? fobj.slides : [])] : [];
+  featuredRaw.forEach((f) => push(obj(f)?.url ?? obj(f)?.link));
+  const about = str(p.about) ?? str(p.summary) ?? "";
+  for (const m of about.matchAll(/https?:\/\/[^\s<>"')\]]+/g)) push(m[0]);
+  const seen = new Set<string>();
+  const unique = found.filter((u) => {
+    const k = u.toLowerCase().replace(/\/$/, "");
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+  const channels = unique.filter((u) => SOCIAL_HOST.test(hostOf(u) ?? "")).slice(0, 8);
+  const website = unique.find((u) => !SOCIAL_HOST.test(hostOf(u) ?? "")) ?? null;
+  return { website, channels };
+}
+
+export function summarizeProfile(raw: unknown): { name: string | null; headline: string | null; facts: string[]; blocks: Evidence["blocks"]; website: string | null; channels: string[] } {
   const p = obj(raw);
-  if (!p) return { name: null, headline: null, facts: [], blocks: [], website: null };
+  if (!p) return { name: null, headline: null, facts: [], blocks: [], website: null, channels: [] };
   const first = str(p.firstName);
   const last = str(p.lastName);
   const name = str(p.name) ?? str(p.fullName) ?? (first || last ? [first, last].filter(Boolean).join(" ") : null);
@@ -49,10 +93,7 @@ export function summarizeProfile(raw: unknown): { name: string | null; headline:
     .map((f) => (typeof f === "string" ? str(f) : obj(f) ? str(obj(f)?.title) ?? str(obj(f)?.text) : null))
     .filter(Boolean)
     .slice(0, 6) as string[];
-  const website =
-    list(p.profileActions)
-      .map((a) => str(a.url))
-      .find((u): u is string => Boolean(u) && /^https?:\/\//i.test(u as string) && !/linkedin\.com|calendar\.app\.google|calendly\.com/i.test(u as string)) ?? null;
+  const { website, channels } = profileLinks(p);
 
   const facts: string[] = [];
   if (name) facts.push(`Name: ${name}`);
@@ -67,6 +108,7 @@ export function summarizeProfile(raw: unknown): { name: string | null; headline:
   if (typeof p.connectionsCount === "number") facts.push(`LinkedIn connections: ${p.connectionsCount.toLocaleString("en-US")}`);
   if (featured.length) facts.push(`Featured on profile: ${featured.map((f) => `"${f}"`).join("; ")}`);
   if (website) facts.push(`Website on profile: ${website}`);
+  if (channels.length) facts.push(`Other channels linked from the profile: ${channels.join(", ")}`);
 
   const blocks: Evidence["blocks"] = [];
   const about = str(p.about) ?? str(p.summary);
@@ -74,7 +116,7 @@ export function summarizeProfile(raw: unknown): { name: string | null; headline:
   if (experience.length) blocks.push({ label: "Experience, most recent first", text: experience.map((e) => `- ${e}`).join("\n") });
   if (education.length) blocks.push({ label: "Education", text: education.map((e) => `- ${e}`).join("\n") });
   if (skills.length) blocks.push({ label: "Skills listed", text: skills.join(", ") });
-  return { name, headline, facts, blocks, website };
+  return { name, headline, facts, blocks, website, channels };
 }
 
 export function summarizePosts(items: unknown[]): string[] {
@@ -110,6 +152,7 @@ export async function readLinkedIn(profileUrl: string, maxPosts: number): Promis
     evidence.facts.push(...summary.facts);
     evidence.blocks.push(...summary.blocks);
     evidence.linkedWebsite = summary.website;
+    evidence.linkedChannels = summary.channels;
   }
   if (posts.status === "fulfilled" && posts.value) {
     evidence.apifyRunIds.push(posts.value.runId);

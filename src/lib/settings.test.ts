@@ -108,3 +108,18 @@ describe("IDEA-GENERATOR.md", () => {
     blocks.forEach((block, index) => expect(files[index].endsWith(block)).toBe(true));
   });
 });
+
+
+describe("secondary call to action", () => {
+  const base = readFileSync("examples/second-act-map.yaml", "utf8");
+  it("accepts a button with a link", () => {
+    const result = parseSettings(base.replace(/^cta:\n/m, 'cta:\n  secondaryText: "Not ready for a call?"\n  secondaryButtonText: "Get the free guide"\n  secondaryUrl: "https://example.com/guide"\n'));
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.settings.cta.secondaryUrl).toBe("https://example.com/guide");
+  });
+  it("refuses a button without a link", () => {
+    const result = parseSettings(base.replace(/^cta:\n/m, 'cta:\n  secondaryButtonText: "Get the free guide"\n'));
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors.join(" ")).toMatch(/go together/);
+  });
+});

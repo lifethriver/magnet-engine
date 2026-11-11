@@ -16,13 +16,15 @@ export interface Evidence {
   blocks: EvidenceBlock[];
   /** A website found on the profile, read for extra context when enabled. */
   linkedWebsite: string | null;
+  /** Other public channels linked from the profile or site (YouTube, Instagram, Facebook, TikTok, X, LinkedIn). Full URLs. */
+  linkedChannels: string[];
   apifyRunIds: string[];
   /** How much there was to work with; "none" fails the report before the AI call. */
   strength: "rich" | "thin" | "none";
 }
 
 export function emptyEvidence(source: SourceType, url: string): Evidence {
-  return { source, url, subject: { name: null, handle: null }, facts: [], blocks: [], linkedWebsite: null, apifyRunIds: [], strength: "none" };
+  return { source, url, subject: { name: null, handle: null }, facts: [], blocks: [], linkedWebsite: null, linkedChannels: [], apifyRunIds: [], strength: "none" };
 }
 
 export function gradeStrength(evidence: Evidence): Evidence["strength"] {

@@ -93,3 +93,25 @@ describe("htmlToText on hostile input", () => {
     expect(htmlToText("<p>3 < 5</p><!-- hidden --><p>ok</p>").text).toBe("3 < 5\nok");
   });
 });
+
+
+describe("profileLinks", () => {
+  it("finds the website and every channel across the profile", async () => {
+    const { profileLinks } = await import("./linkedin");
+    const out = profileLinks({
+      profileActions: [{ url: "https://calendly.com/x" }, { url: "https://www.franklinlaser.com/" }],
+      websites: [{ url: "https://www.youtube.com/@FranklinSkinandLaser" }],
+      contactInfo: { twitter: "https://x.com/drfelice" },
+      about: "Follow us at https://www.instagram.com/franklinskinandlaser and https://www.franklinlaser.com.",
+      featured: { items: [{ url: "https://www.facebook.com/FranklinSkinandLaser" }] },
+    });
+    expect(out.website).toBe("https://www.franklinlaser.com/");
+    expect([...out.channels].sort()).toEqual(
+      ["https://www.youtube.com/@FranklinSkinandLaser", "https://x.com/drfelice", "https://www.instagram.com/franklinskinandlaser", "https://www.facebook.com/FranklinSkinandLaser"].sort(),
+    );
+  });
+  it("returns nothing for a profile with no links", async () => {
+    const { profileLinks } = await import("./linkedin");
+    expect(profileLinks({ about: "Dermatologist in Franklin." })).toEqual({ website: null, channels: [] });
+  });
+});

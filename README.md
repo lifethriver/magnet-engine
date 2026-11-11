@@ -48,6 +48,12 @@ You can paste a new block any time. Reports you already sent keep their content.
 
 On the **Build reports** tab, paste up to 10 prospect links (one per line) and click **Build reports**. Each takes about a minute. Open each one from the **Reports** tab and read it as if you were the prospect. If a section feels generic, make that section's `asks` more demanding in your settings (tell it to name specific videos, posts or pages), save, and click **Rebuild** on the report.
 
+## What the report reads
+
+The report starts from the one link you gave it, then follows what that page links to: the business website (free), a YouTube channel (free) and a public Instagram profile (under a cent), and it names any other profiles it saw (Facebook, TikTok, X). That's what makes a report specific to one person instead of generic. If a prospect's profile doesn't link their website or channel, open **Build reports**, expand **Point it at their website or YouTube channel**, and type them in; that build reads them too.
+
+Your button box can carry a quieter second step for readers who aren't ready for the first one (a free guide, your newsletter): add `secondaryText`, `secondaryButtonText` and `secondaryUrl` under `cta:` in your settings.
+
 ## The four ways to use your magnet
 
 1. **Sent links (the main way).** Build a report ahead of time on the **Build reports** tab, check it, then send the link in your DM or email. The prospect sees a finished report with no forms. You can add up to 3 notes from your conversation with them (for example, their answers to 3 quick questions), and the report uses them.

@@ -1,7 +1,7 @@
 import { adminGuard } from "@/lib/admin-guard";
 import { createReport, expireIfStale, listReports, ownerErrorMessage, reportPath } from "@/lib/reports";
 import { loadSettings } from "@/lib/settings-store";
-import { normalizeSourceUrl } from "@/lib/source-urls";
+import { normalizeSourceUrl, normalizeWebsite, normalizeYouTube } from "@/lib/source-urls";
 import { requestOrigin, startReport } from "@/lib/trigger";
 
 export const runtime = "nodejs";
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
   if (!loaded) return Response.json({ error: "Save your settings first." }, { status: 409 });
   const { settings } = loaded;
 
-  const body = (await request.json().catch(() => ({}))) as { links?: unknown; notes?: unknown };
+  const body = (await request.json().catch(() => ({}))) as { links?: unknown; notes?: unknown; website?: unknown; youtube?: unknown };
   const links = (Array.isArray(body.links) ? body.links : [])
     .filter((link): link is string => typeof link === "string")
     .map((link) => link.trim())
@@ -64,6 +64,19 @@ export async function POST(request: Request) {
   if (notes.length > 0 && links.length > 1) {
     return Response.json({ error: "Conversation notes belong to one person, so build one link at a time when you add notes." }, { status: 400 });
   }
+  // Optional help for one prospect: their website and YouTube channel, when the profile doesn't link them.
+  const hints: { website?: string; youtube?: string } = {};
+  const websiteHint = typeof body.website === "string" ? body.website.trim() : "";
+  const youtubeHint = typeof body.youtube === "string" ? body.youtube.trim() : "";
+  if ((websiteHint || youtubeHint) && links.length > 1) {
+    return Response.json({ error: "A website or YouTube channel belongs to one person, so build one link at a time when you add them." }, { status: 400 });
+  }
+  try {
+    if (websiteHint) hints.website = normalizeWebsite(websiteHint);
+    if (youtubeHint) hints.youtube = normalizeYouTube(youtubeHint);
+  } catch (err) {
+    return Response.json({ error: err instanceof Error ? err.message : "Check the website or YouTube link." }, { status: 400 });
+  }
 
   const origin = requestOrigin(request);
   const results: { input: string; link?: string; error?: string }[] = [];
@@ -75,7 +88,7 @@ export async function POST(request: Request) {
       results.push({ input, error: err instanceof Error ? err.message : "Check this link." });
       continue;
     }
-    const record = await createReport({ mode: "sent", source: settings.source.type, url, notes });
+    const record = await createReport({ mode: "sent", source: settings.source.type, url, notes, hints });
     await startReport(record.id, origin);
     results.push({ input, link: `${origin}${reportPath(record)}` });
   }

@@ -79,12 +79,21 @@ export const SettingsSchema = z.strictObject({
     reportIntro: optionalText(600),
     closing: optionalText(800),
   }),
-  cta: z.strictObject({
-    heading: optionalText(140),
-    text: optionalText(600),
-    buttonText: text(2, 50),
-    url: ctaUrl,
-  }),
+  cta: z
+    .strictObject({
+      heading: optionalText(140),
+      text: optionalText(600),
+      buttonText: text(2, 50),
+      url: ctaUrl,
+      /** A quieter second step for readers who aren't ready for the first (a free guide, a newsletter). */
+      secondaryText: optionalText(300),
+      secondaryButtonText: optionalText(50),
+      secondaryUrl: ctaUrl.optional(),
+    })
+    .refine((cta) => Boolean(cta.secondaryButtonText?.trim()) === Boolean(cta.secondaryUrl), {
+      message: "secondaryButtonText and secondaryUrl go together: give both or neither",
+      path: ["secondaryUrl"],
+    }),
   branding: z
     .strictObject({
       logoUrl: httpsUrl.optional(),

@@ -281,6 +281,8 @@ function lines(value: string): string[] {
 function BuildTab({ api, configured }: { api: Api; configured: boolean }) {
   const [links, setLinks] = useState("");
   const [notes, setNotes] = useState(["", "", ""]);
+  const [website, setWebsite] = useState("");
+  const [youtube, setYoutube] = useState("");
   const [results, setResults] = useState<{ input: string; link?: string; error?: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -292,7 +294,7 @@ function BuildTab({ api, configured }: { api: Api; configured: boolean }) {
     setError(null);
     const res = await api<{ results?: typeof results; error?: string }>("/api/admin/reports", {
       method: "POST",
-      body: JSON.stringify({ links: lines(links), notes: notes.filter((n) => n.trim()) }),
+      body: JSON.stringify({ links: lines(links), notes: notes.filter((n) => n.trim()), website: website.trim(), youtube: youtube.trim() }),
     });
     setBusy(false);
     if (!res.ok) {
@@ -309,6 +311,14 @@ function BuildTab({ api, configured }: { api: Api; configured: boolean }) {
         Paste one prospect link per line (up to 10). Each report builds in about a minute; check it on the Reports tab, then send the link. People who open these links never see an opt-in form.
       </p>
       <textarea className={`${INPUT} mt-4 h-36 font-mono text-xs`} value={links} onChange={(e) => setLinks(e.target.value)} placeholder="One link per line" />
+      <details className="mt-4 rounded-lg border border-zinc-200 bg-white p-4">
+        <summary className="cursor-pointer text-sm font-semibold">Point it at their website or YouTube channel (optional, one prospect only)</summary>
+        <p className="mt-2 text-sm text-zinc-600">The report follows the links it finds on their page by itself. Add these only when their profile doesn&apos;t link them.</p>
+        <div className="mt-3 space-y-2">
+          <input className={INPUT} value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="Their website, e.g. yourbusiness.com" />
+          <input className={INPUT} value={youtube} onChange={(e) => setYoutube(e.target.value)} placeholder="Their YouTube channel, e.g. youtube.com/@channel" />
+        </div>
+      </details>
       <details className="mt-4 rounded-lg border border-zinc-200 bg-white p-4">
         <summary className="cursor-pointer text-sm font-semibold">Add notes from a conversation (optional, one prospect only)</summary>
         <p className="mt-2 text-sm text-zinc-600">Up to 3 short answers this person gave you in a DM or call. The report uses them alongside their public page.</p>

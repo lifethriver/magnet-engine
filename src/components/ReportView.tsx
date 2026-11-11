@@ -34,6 +34,18 @@ export function ReportView({ settings, record, path }: { settings: Settings; rec
         <div className="mt-6">
           <CtaButton href={settings.cta.url} label={settings.cta.buttonText} reportPath={path} />
         </div>
+        {settings.cta.secondaryButtonText && settings.cta.secondaryUrl && (
+          <div className="mt-6 border-t border-white/20 pt-5">
+            {settings.cta.secondaryText && <p className="text-sm opacity-90">{settings.cta.secondaryText}</p>}
+            <a
+              href={settings.cta.secondaryUrl}
+              {...(settings.cta.secondaryUrl.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="mt-3 inline-block rounded-lg border border-current px-5 py-2.5 text-sm font-semibold transition hover:opacity-80"
+            >
+              {settings.cta.secondaryButtonText}
+            </a>
+          </div>
+        )}
       </section>
     </main>
   );

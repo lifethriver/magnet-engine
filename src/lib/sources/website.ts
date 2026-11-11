@@ -206,7 +206,10 @@ export async function readWebsite(url: string): Promise<Evidence> {
   evidence.facts.push(`Blog, articles or podcast section: ${signals.blog ? "yes" : "no"}`);
   evidence.facts.push(`Online booking link: ${signals.booking ? "yes" : "no"}`);
   if (signals.platforms.length) evidence.facts.push(`Tools seen on the site: ${signals.platforms.join(", ")}`);
-  if (signals.socialLinks.length) evidence.facts.push(`Social profiles linked from the site: ${signals.socialLinks.join(", ")}`);
+  if (signals.socialLinks.length) {
+    evidence.facts.push(`Social profiles linked from the site: ${signals.socialLinks.join(", ")}`);
+    evidence.linkedChannels = signals.socialLinks.map((link) => `https://${link}`);
+  }
   evidence.strength = gradeStrength(evidence);
   return evidence;
 }

@@ -119,6 +119,9 @@ cta:
   text: "optional sentence or two in the button box, under 600 characters"
   buttonText: "button label, under 50 characters"
   url: "the full link starting with https:// (or mailto:me@example.com for reply-to-me)"
+  secondaryText: "optional short line above a quieter second button, under 300 characters, like 'Not ready for a call?'"
+  secondaryButtonText: "optional second button, under 50 characters, like 'Get the free guide' (give it together with secondaryUrl or leave both out)"
+  secondaryUrl: "optional https:// link for the second button"
 branding:   (optional)
   logoUrl: "optional, a full https:// link to a logo image"
   primaryColor: "#rrggbb"
